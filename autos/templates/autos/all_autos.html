@@ -1,0 +1,9 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<ul>
+{% for mark, description in marks.items %}
+<li> <p> <a href = "{% url 'single-auto' mark %}"> {{mark}} </a> --- {{description}}</li>
+{% endfor %}
+</ul>
+{% endblock content %}
