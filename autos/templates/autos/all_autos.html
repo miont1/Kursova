@@ -2,8 +2,14 @@
 
 {% block content %}
 <ul>
-{% for mark, description in marks.items %}
-<li> <p> <a href = "{% url 'single-auto' mark %}"> {{mark}} </a> --- {{description}}</li>
-{% endfor %}
+    {% for auto in autos %}
+    <p>ID: {{auto.id}}</p>
+    <p>Car: <a href="{% url 'single-auto' auto.id %}"> {{auto.car_brand}} {{auto.car_model}}</a>
+    <p>Description: {{auto.description}}</p>
+    <p>Created: {{auto.created}}</p>
+    <p><a href="{% url 'update-auto' auto.id %}">Edit</a>
+    <p><a href="{% url 'delete-auto' auto.id %}">Delete</a>
+    <hr>
+    {% endfor %}
 </ul>
 {% endblock content %}

@@ -11,7 +11,7 @@ class AutosModel(models.Model):
     demo_link = models.CharField(max_length=2000, null=True, blank=True)
     source_link = models.CharField(max_length=2000, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField('Tags', blank=True)
+    tags = models.ManyToManyField('Tag', blank=True)
 
     def __str__(self):
         return f"{self.car_brand} {self.car_model}"
@@ -44,7 +44,7 @@ class Profile(models.Model):
         return self.user.username
 
 
-class ProfileComments(models.Model):
+class ProfileComment(models.Model):
     VOTE_TYPE = (
         ("like", "Recommend profile"),
         ("dislike", "Don't recommend profile")
@@ -64,7 +64,7 @@ class ProfileComments(models.Model):
         return self.topic
 
 
-class AutoComments(models.Model):
+class AutoComment(models.Model):
     VOTE_TYPE = (
         ("like", "Recommend car"),
         ("dislike", "Don't recommend car")
@@ -84,7 +84,7 @@ class AutoComments(models.Model):
         return self.topic
 
 
-class Tags(models.Model):
+class Tag(models.Model):
     name = models.CharField(max_length=100)
     id = models.BigAutoField(primary_key=True)
     created = models.DateTimeField(auto_now_add=True)

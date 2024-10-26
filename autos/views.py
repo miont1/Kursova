@@ -1,34 +1,62 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
+from .models import AutosModel
+from .forms import AutoForm
 
 # Create your views here.
 
-ALL_MARKS = {
-    "AUDI": "Audi AG (German: [ˈaʊ̯di ʔaːˈɡeː]) is a German automotive manufacturer of luxury vehicles headquartered in Ingolstadt, Bavaria, Germany. A subsidiary of the Volkswagen Group, Audi produces vehicles in nine production facilities worldwide.",
-    "BMW": "The BMW Group is the world's leading provider of premium cars and motorcycles and the home of the BMW, MINI, Rolls-Royce and BMW Motorrad brands. Our vehicles and products are tailored to the needs of our customers and constantly enhanced – with a clear focus on sustainability and the conservation of resources.",
-    "TOYOTA": "Toyota Motor Corp: Overview The company designs, manufactures and sells passenger cars, buses, minivans, trucks, specialty cars, recreational and sport-utility vehicles. It provides financing to dealers and customers for the purchase or lease of vehicles.",
-    "LEXUS": "Lexus (レクサス, Rekusasu) is the luxury vehicle division of the Japanese automaker Toyota Motor Corporation. The Lexus brand is marketed in more than 90 countries and territories worldwide[3][6] and is Japan's largest-selling make of premium cars. It has ranked among the 10 largest Japanese global brands in market value.[7] Lexus is headquartered in Nagoya, Japan. Operational centers are located in Brussels, Belgium, and Plano, Texas, United States."
-}
-
-
 def all_autos(request):
-    return render(request, 'autos/all_autos.html', {'marks': ALL_MARKS})
+    autos = AutosModel.objects.all()
+    context = {'autos': autos}
+    return render(request, 'autos/all_autos.html', context)
 
 
 def all_autos_info(request, auto_name: str):
-    description = ALL_MARKS.get(auto_name)
-    context = {'description': description, 'auto_name': auto_name}
-    if description:
+    try:
+        auto = AutosModel.objects.get(car_brand=auto_name)
+        tags = auto.tags.all()
+        context = {'auto': auto, 'tags': tags}
         return render(request, 'autos/auto.html', context)
-    else:
-        return render(request, 'autos/not-founded.html', context)
+    except AutosModel.DoesNotExist:
+        return render(request, 'autos/not-founded.html', {'auto_name': auto_name})
 
 
 def all_autos_info_number(request, auto_number: int):
-    auto_list = list(ALL_MARKS)
-    if auto_number > auto_list.__len__():
+    try:
+        auto = AutosModel.objects.get(id=auto_number)  # Виклик get() всередині try
+        redirect_url = reverse('single-auto', args=(auto.car_brand,))
+        return HttpResponseRedirect(redirect_url)
+    except AutosModel.DoesNotExist:
         return render(request, 'autos/not-founded.html', {'auto_name': auto_number})
-    auto = auto_list[auto_number - 1]
-    redirect_url = reverse('single-auto', args=(auto,))
-    return HttpResponseRedirect(redirect_url)
+
+
+def auto_create(request):
+    form = AutoForm()
+    if request.method == 'POST':
+        form = AutoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('all_autos')
+    context = {'form': form}
+    return render(request, 'autos/auto-form.html', context)
+
+
+def auto_update(request, pk):
+    auto = AutosModel.objects.get(id=pk)
+    form = AutoForm(instance=auto)
+    if request.method == 'POST':
+        form = AutoForm(request.POST, instance=auto)
+        if form.is_valid():
+            form.save()
+            return redirect('all_autos')
+    context = {'form': form}
+    return render(request, 'autos/auto-form.html', context)
+
+def auto_delete(request, pk):
+    auto = AutosModel.objects.get(id=pk)
+    context = {'object': auto}
+    if request.method == 'POST':
+        auto.delete()
+        return redirect('all_autos')
+    return render(request, 'autos/delete-template.html', context)

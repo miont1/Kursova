@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import AutosModel, User, Profile, ProfileComments, AutoComments, Tags
+from .models import AutosModel, User, Profile, ProfileComment, AutoComment, Tag
 # Register your models here.
 
 admin.site.register(AutosModel)
 admin.site.register(User)
 admin.site.register(Profile)
-admin.site.register(ProfileComments)
-admin.site.register(AutoComments)
-admin.site.register(Tags)
+admin.site.register(ProfileComment)
+admin.site.register(AutoComment)
+admin.site.register(Tag)
