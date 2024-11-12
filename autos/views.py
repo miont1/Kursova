@@ -26,7 +26,7 @@ def all_autos_info_number(request, auto_number: int):
 def auto_create(request):
     form = AutoForm()
     if request.method == 'POST':
-        form = AutoForm(request.POST)
+        form = AutoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('all_autos')
@@ -38,7 +38,7 @@ def auto_update(request, pk):
     auto = AutosModel.objects.get(id=pk)
     form = AutoForm(instance=auto)
     if request.method == 'POST':
-        form = AutoForm(request.POST, instance=auto)
+        form = AutoForm(request.POST, request.FILES, instance=auto)
         if form.is_valid():
             form.save()
             return redirect('all_autos')

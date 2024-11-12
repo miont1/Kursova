@@ -3,6 +3,7 @@
 {% block content %}
 <ul>
     {% for auto in autos %}
+    <img style="max-width: 350px" src="{{ auto.featured_image.url }}">
     <p>ID: {{auto.id}}</p>
     <p>Car: <a href="{% url 'single-auto' auto.id %}"> {{auto.car_brand}} {{auto.car_model}}</a>
     <p>Description: {{auto.description}}</p>
