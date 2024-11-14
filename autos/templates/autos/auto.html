@@ -1,12 +1,60 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<h1> single auto {{auto.car_brand}}</h1>
-<img style="max-width: 350px" src="{{ auto.featured_image.url }}">
+<!-- Main Section -->
+  <main class="singleProject my-md">
+    <div class="container">
+      <div class="layout">
+          <div class="column column--1of3">
+          <h3 class="singleProject__subtitle">Tags</h3>
+              {%for tag in tags%}
+          <div class="singleProject__toolStack">
+            <span class="tag tag--pill tag--sub tag--lg">
+              <small>{{tag}}</small>
+            </span>
+              {%endfor%}
+          </div>
+          </div>
+        <div class="column column--2of3">
+          <img class="singleProject__preview" src="{{ auto.featured_image.url }}" alt="auto thumbnail" />
+          <a href="profile.html" class="singleProject__developer">{{auto.owner.name}}</a>
+          <h2 class="singleProject__title">{{auto.car_brand}} {{auto.car_model}}</h2>
+          <h3 class="singleProject__subtitle">About the Auto</h3>
+          <div class="singleProject__info">{{auto.description}} </div>
 
-{%for tag in tags%}
-<span style="border:1px solid grey">{{tag}}</span>
-{%endfor%}
+          <div class="comments">
+            <h3 class="singleProject__subtitle">Feedback</h3>
+            <h5 class="project--rating">
+                Feedback {{auto.vote_ratio}}% ({{auto.vote_total}} Vote{{auto.vote_total|pluralize:"s"}})
+            </h5>
 
-<p>{{auto.description}}</p>
+            <form class="form" action="#" method="POST">
+              <!-- Textarea -->
+              <div class="form__field">
+                <label for="formInput#textarea">Comments: </label>
+                <textarea class="input input--textarea" name="message" id="formInput#textarea"
+                  placeholder="Write your comments here..."></textarea>
+              </div>
+              <input class="btn btn--sub btn--lg" type="submit" value="Comments" />
+            </form>
+            <div class="commentList">
+              <div class="comment">
+                <a href="profile.html">
+                  <img class="avatar avatar--md" src="https://avatars.githubusercontent.com/u/33843378" alt="user" />
+                </a>
+                <div class="comment__details">
+                  <a href="profile.html" class="comment__author">Dennis Ivanov</a>
+                  <p class="comment__info">
+                    Consectetur adipisicing elit. Reprehenderit alias numquam perferendis mollitia minus minima
+                    exercitationem possimus ab deserunt qui, ratione, dignissimos ut magni laborum quo.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </main>
 {% endblock content %}
