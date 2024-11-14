@@ -1,0 +1,40 @@
+from django.db import models
+from django.contrib.auth.models import User
+
+
+# Create your models here.
+
+
+class Profile(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, null=True, blank=True)
+    username = models.CharField(max_length=50, null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
+    profile_image = models.ImageField(null=True, blank=True, default="profiles/default-user.png", upload_to='profiles/')
+    location = models.CharField(max_length=200)
+    social_links = models.TextField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class ProfileComment(models.Model):
+    VOTE_TYPE = (
+        ("like", "Recommend profile"),
+        ("dislike", "Don't recommend profile")
+    )
+    id = models.BigAutoField(primary_key=True)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    from_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    topic = models.CharField(max_length=30)
+    comment = models.TextField()
+    value = models.CharField(max_length=200, choices=VOTE_TYPE)
+    vote_total = models.IntegerField(default=0, null=True, blank=True)
+    vote_ratio = models.IntegerField(default=0, null=True, blank=True)
+    views = models.IntegerField(default=0)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.topic
