@@ -10,10 +10,12 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
     username = models.CharField(max_length=50, null=True, blank=True)
+    shortbio = models.CharField(max_length=100, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True, default="profiles/default-user.png", upload_to='profiles/')
     location = models.CharField(max_length=200)
-    social_links = models.TextField(null=True, blank=True)
+    social_telegram = models.TextField(null=True, blank=True)
+    social_youtube = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -38,3 +40,14 @@ class ProfileComment(models.Model):
 
     def __str__(self):
         return self.topic
+
+
+class Advantage(models.Model):
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=300, null=True, blank=True)
+    id = models.BigAutoField(primary_key=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

@@ -38,14 +38,13 @@
                     <span style="font-weight: bold;">{{auto.vote_ratio}}% Positive</span>
                     Feedback ({{auto.vote_total}} Vote{{auto.vote_total|pluralize:"s"}})
                   </p>
-
-                    {% for tag in auto.tags.all %}
                   <div class="project__tags">
+                    {% for tag in auto.tags.all %}
                     <span class="tag tag--pill tag--main">
                       <small>{{tag}}</small>
                     </span>
-                  </div>
                     {% endfor %}
+                  </div>
                 </div>
               </a>
             </div>
