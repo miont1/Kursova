@@ -33,7 +33,7 @@
                 <img class="project__thumbnail" src="{{ auto.featured_image.url }}" alt="auto thumbnail" />
                 <div class="card__body">
                   <h3 class="project__title">{{auto.car_brand}} {{auto.car_model}}</h3>
-                  <p><a class="project__author" href="profile.html">By {{auto.owner.name}}</a></p>
+                  <p><a class="project__author" href="{% url 'user-profile' auto.owner.id %}">By {{auto.owner.name}}</a></p>
                   <p class="project--rating">
                     <span style="font-weight: bold;">{{auto.vote_ratio}}% Positive</span>
                     Feedback ({{auto.vote_total}} Vote{{auto.vote_total|pluralize:"s"}})

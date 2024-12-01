@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.urls import reverse
+
+from django.contrib.auth.decorators import login_required
+
 from .models import AutosModel
 from .forms import AutoForm
 
@@ -23,33 +26,42 @@ def all_autos_info_number(request, auto_number: int):
         return render(request, 'autos/not-founded.html', {'auto_name': auto_number})
 
 
+@login_required(login_url="login")
 def auto_create(request):
+    profile = request.user.profile
     form = AutoForm()
     if request.method == 'POST':
         form = AutoForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('all_autos')
+            auto = form.save(commit=False)
+            auto.owner = profile
+            auto.save()
+            return redirect('account')
+
     context = {'form': form}
     return render(request, 'autos/auto-form.html', context)
 
 
+@login_required(login_url="login")
 def auto_update(request, pk):
-    auto = AutosModel.objects.get(id=pk)
+    profile = request.user.profile
+    auto = profile.autosmodel_set.get(id=pk)
     form = AutoForm(instance=auto)
     if request.method == 'POST':
         form = AutoForm(request.POST, request.FILES, instance=auto)
         if form.is_valid():
             form.save()
-            return redirect('all_autos')
+            return redirect('account')
     context = {'form': form}
     return render(request, 'autos/auto-form.html', context)
 
 
+@login_required(login_url="login")
 def auto_delete(request, pk):
-    auto = AutosModel.objects.get(id=pk)
+    profile = request.user.profile
+    auto = profile.autosmodel_set.get(id=pk)
     context = {'object': auto}
     if request.method == 'POST':
         auto.delete()
         return redirect('all_autos')
-    return render(request, 'autos/delete-template.html', context)
+    return render(request, 'delete-template.html', context)

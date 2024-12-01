@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
 
 # Create your models here.
 
@@ -9,17 +12,18 @@ class Profile(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50, null=True, blank=True)
+    email = models.EmailField(max_length=254, default="default@example.com")
     username = models.CharField(max_length=50, null=True, blank=True)
     shortbio = models.CharField(max_length=100, null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     profile_image = models.ImageField(null=True, blank=True, default="profiles/default-user.png", upload_to='profiles/')
     location = models.CharField(max_length=200)
-    social_telegram = models.TextField(null=True, blank=True)
-    social_youtube = models.TextField(null=True, blank=True)
+    social_telegram = models.CharField(max_length=500, null=True, blank=True)
+    social_youtube = models.CharField(max_length=500, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return self.username
 
 
 class ProfileComment(models.Model):
