@@ -20,6 +20,25 @@ class AutosModel(models.Model):
     def __str__(self):
         return f"{self.car_brand} {self.car_model}"
 
+    class Meta:
+        ordering = ['-vote_ratio', '-vote_total', 'car_brand', 'car_model']
+
+    @property
+    def commentators(self):
+        querySet = self.autocomment_set.all().values_list('from_user__id', flat=True)
+        return querySet
+
+    @property
+    def getVoteCount(self):
+        comment = self.autocomment_set.all()
+        upVotes = comment.filter(value="like").count()
+        totalVotes = comment.count()
+        ratio = (upVotes / totalVotes) * 100
+
+        self.vote_total = totalVotes
+        self.vote_ratio = ratio
+        self.save()
+
 
 class AutoComment(models.Model):
     VOTE_TYPE = (
@@ -28,7 +47,7 @@ class AutoComment(models.Model):
     )
     id = models.BigAutoField(primary_key=True)
     auto = models.ForeignKey(AutosModel, on_delete=models.CASCADE)
-    from_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    from_user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     topic = models.CharField(max_length=30)
     comment = models.TextField()
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
@@ -37,8 +56,11 @@ class AutoComment(models.Model):
     views = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = [["from_user", "auto"]]
+
     def __str__(self):
-        return self.topic
+        return self.from_user
 
 
 class Tag(models.Model):

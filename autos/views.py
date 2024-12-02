@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import AutosModel
-from .forms import AutoForm
+from .forms import AutoForm, CommentAutoForm
 from .utils import searchAuto, paginateAutos
 
 
@@ -17,11 +18,26 @@ def all_autos(request):
 
 
 def all_autos_info_number(request, auto_number: int):
+    form = CommentAutoForm()
     try:
         auto = AutosModel.objects.get(id=auto_number)
         tags = auto.tags.all()
-        context = {'auto': auto, 'tags': tags}
+
+        if request.method == "POST":
+            form = CommentAutoForm(request.POST)
+            comment = form.save(commit=False)
+            comment.auto = auto
+            comment.from_user = request.user.profile
+
+            comment.save()
+            auto.getVoteCount
+
+            messages.success(request, "Your comment was successfully submitted!")
+            return redirect('single-auto', auto_number=auto.id)
+
+        context = {'auto': auto, 'tags': tags, 'form': form}
         return render(request, 'autos/auto.html', context)
+
     except AutosModel.DoesNotExist:
         return render(request, 'autos/not-founded.html', {'auto_name': auto_number})
 

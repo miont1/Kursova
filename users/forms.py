@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Advantage
+from .models import Profile, Advantage, ProfileComment
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -42,6 +42,24 @@ class AdvantageForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AdvantageForm, self).__init__(*args, **kwargs)
+
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})
+
+
+class CommentUserForm(ModelForm):
+    class Meta:
+        model = ProfileComment
+        fields = ["value", "topic", "comment"]
+
+        labels = {
+            "value": "Give a vote",
+            "topic": "Write a short topic",
+            "comment": "Add a comment with your vote"
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(CommentUserForm, self).__init__(*args, **kwargs)
 
         for name, field in self.fields.items():
             field.widget.attrs.update({'class': 'input'})

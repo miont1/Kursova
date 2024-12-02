@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 
 from .models import Profile
-from .forms import CustomUserCreationForm, ProfileForm, AdvantageForm
+from .forms import CustomUserCreationForm, ProfileForm, AdvantageForm, CommentUserForm
 from .utils import searchProfile, paginateProfiles
 
 
@@ -16,18 +16,32 @@ from .utils import searchProfile, paginateProfiles
 def profiles(request):
     profiles, search_query = searchProfile(request)
     custom_range, profiles = paginateProfiles(request, profiles, 6)
-
     contex = {'profiles': profiles, "search_query": search_query, "custom_range": custom_range}
     return render(request, 'users/profiles.html', contex)
 
 
 def userProfile(request, pk):
+    form = CommentUserForm()
     profile = Profile.objects.get(id=pk)
+
     adv_descr = profile.advantage_set.exclude(description__exact="").exclude(description__isnull=True)
     adv = profile.advantage_set.filter(description__exact="").union(profile.advantage_set.filter(description__isnull=True))
 
+    if request.method == "POST":
+        form = CommentUserForm(request.POST)
+        comment = form.save(commit=False)
+        comment.profile = profile
+        comment.from_user = request.user.profile
+
+        comment.save()
+        profile.getVoteCount
+
+        messages.success(request, "Your comment was successfully submitted!")
+        return redirect('user-profile', pk=profile.id)
+
     contex = {'profile': profile, 'adv_descr': adv_descr,
-              'adv': adv}
+              'adv': adv, "form": form}
+
     return render(request, 'users/profile.html', contex)
 
 
@@ -37,7 +51,7 @@ def loginUser(request):
         return redirect('profiles')
 
     if request.method == "POST":
-        username = request.POST['username']
+        username = request.POST['username'].lower()
         password = request.POST['password']
         try:
             user = User.objects.get(username=username)
@@ -47,7 +61,7 @@ def loginUser(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('profiles')
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
             messages.error(request, "Username OR password is incorrect")
 

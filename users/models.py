@@ -20,20 +20,38 @@ class Profile(models.Model):
     location = models.CharField(max_length=200)
     social_telegram = models.CharField(max_length=500, null=True, blank=True)
     social_youtube = models.CharField(max_length=500, null=True, blank=True)
+    vote_total = models.IntegerField(default=0, null=True, blank=True)
+    vote_ratio = models.IntegerField(default=0, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.username
 
+    @property
+    def commentators(self):
+        querySet = self.profilecomment_set.all().values_list('from_user__id', flat=True)
+        return querySet
+
+    @property
+    def getVoteCount(self):
+        comment = self.profilecomment_set.all()
+        upVotes = comment.filter(value="like").count()
+        totalVotes = comment.count()
+        ratio = (upVotes / totalVotes) * 100
+
+        self.vote_total = totalVotes
+        self.vote_ratio = ratio
+        self.save()
+
 
 class ProfileComment(models.Model):
     VOTE_TYPE = (
-        ("like", "Recommend profile"),
-        ("dislike", "Don't recommend profile")
+        ("like", "Recommend user"),
+        ("dislike", "Don't recommend user")
     )
     id = models.BigAutoField(primary_key=True)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    from_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    from_user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="comments_made", null=True)
     topic = models.CharField(max_length=30)
     comment = models.TextField()
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
@@ -42,8 +60,11 @@ class ProfileComment(models.Model):
     views = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = [["from_user", "profile"]]
+
     def __str__(self):
-        return self.topic
+        return f"{self.from_user} -> {self.profile}"
 
 
 class Advantage(models.Model):
