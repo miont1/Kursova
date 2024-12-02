@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -7,13 +8,16 @@ from django.contrib.auth.models import User
 
 from .models import Profile
 from .forms import CustomUserCreationForm, ProfileForm, AdvantageForm
+from .utils import searchProfile, paginateProfiles
 
 
 # Create your views here.
 
 def profiles(request):
-    profiles = Profile.objects.all()
-    contex = {'profiles': profiles}
+    profiles, search_query = searchProfile(request)
+    custom_range, profiles = paginateProfiles(request, profiles, 6)
+
+    contex = {'profiles': profiles, "search_query": search_query, "custom_range": custom_range}
     return render(request, 'users/profiles.html', contex)
 
 

@@ -1,18 +1,18 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
-from django.urls import reverse
-
 from django.contrib.auth.decorators import login_required
 
 from .models import AutosModel
 from .forms import AutoForm
+from .utils import searchAuto, paginateAutos
 
 
 # Create your views here.
 
 def all_autos(request):
-    autos = AutosModel.objects.all()
-    context = {'autos': autos}
+    autos, search_query = searchAuto(request)
+    custom_range, autos = paginateAutos(request, autos, 6)
+
+    context = {'autos': autos, "search_query": search_query, "custom_range": custom_range}
     return render(request, 'autos/all_autos.html', context)
 
 
