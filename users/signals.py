@@ -15,7 +15,7 @@ def createProfile(sender, instance, created, **kwargs):
             name=user.first_name,
         )
         subject = 'Welcome to AutoShop'
-        message = 'We are glad u choose us!'
+        message = 'We are glad you choose us!'
         send_mail(
             subject,
             message,

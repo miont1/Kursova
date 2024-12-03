@@ -10,6 +10,7 @@ class AutosModel(models.Model):
     id = models.BigAutoField(primary_key=True)
     car_brand = models.CharField(max_length=50)
     car_model = models.CharField(max_length=50)
+    price = models.IntegerField(default=0)
     featured_image = models.ImageField(null=True, blank=True, default="default-auto.jpg")
     description = models.TextField(null=True, blank=True)
     vote_total = models.IntegerField(default=0, null=True, blank=True)
