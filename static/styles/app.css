@@ -846,3 +846,21 @@ img {
   margin-bottom: 1rem;
   margin-top: 2rem;
 }
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+.notification.show {
+    display: block;
+    opacity: 1;
+}
+

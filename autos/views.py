@@ -1,3 +1,4 @@
+from django.core.serializers import serialize
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -81,3 +82,4 @@ def auto_delete(request, pk):
         auto.delete()
         return redirect('all_autos')
     return render(request, 'delete-template.html', context)
+

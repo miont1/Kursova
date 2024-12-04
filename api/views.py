@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
-from .serializers import AutoSerializer
+from .serializers import AutosModelSerializer
 from autos.models import AutosModel, AutoComment
 
 
@@ -22,14 +22,14 @@ def getRoutes(request):
 @api_view(['GET'])
 def getAutos(request):
     autos = AutosModel.objects.all()
-    serializer = AutoSerializer(autos, many=True)
+    serializer = AutosModelSerializer(autos, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
 def getAuto(request, pk):
     auto = AutosModel.objects.get(id=pk)
-    serializer = AutoSerializer(auto)
+    serializer = AutosModelSerializer(auto)
     return Response(serializer.data)
 
 
@@ -47,5 +47,5 @@ def autoVote(request, pk):
     comment.save()
     auto.getVoteCount
 
-    serializer = AutoSerializer(auto, many=False)
+    serializer = AutosModelSerializer(auto, many=False)
     return Response(serializer.data)

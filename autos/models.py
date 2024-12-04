@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class AutosModel(models.Model):
-    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.CASCADE)
     id = models.BigAutoField(primary_key=True)
     car_brand = models.CharField(max_length=50)
     car_model = models.CharField(max_length=50)

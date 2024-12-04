@@ -21,7 +21,7 @@ class TagSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class AutoSerializer(serializers.ModelSerializer):
+class AutosModelSerializer(serializers.ModelSerializer):
     owner = ProfileSerializer(many=False)
     tags = TagSerializer(many=True)
     comments = serializers.SerializerMethodField()

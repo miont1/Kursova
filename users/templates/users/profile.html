@@ -66,7 +66,7 @@
                         {% for auto in profile.autosmodel_set.all %}
                         <div class="column">
                             <div class="card project">
-                                <a href="{% url 'user-profile' profile.id %}" class="project">
+                                <a href="{% url 'single-auto' auto.id %}" class="project">
 
                                     <img class="project__thumbnail" src="{{auto.featured_image.url}}"
                                          alt="project thumbnail"/>

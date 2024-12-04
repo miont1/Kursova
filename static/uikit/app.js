@@ -1,4 +1,3 @@
-// Invoke Functions Call on Document Loaded
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
   hljs.highlightAll();
 });
