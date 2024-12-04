@@ -80,6 +80,6 @@ def auto_delete(request, pk):
     context = {'object': auto}
     if request.method == 'POST':
         auto.delete()
-        return redirect('all_autos')
+        return redirect('account')
     return render(request, 'delete-template.html', context)
 

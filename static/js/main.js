@@ -10,7 +10,6 @@
 
          // GET data attribute
          let page = this.dataset.page
-         console.log('page:', page)
 
          // ADD hidden search input to form
          searchForm.innerHTML += `<input value=${page} name="page" hidden/>`

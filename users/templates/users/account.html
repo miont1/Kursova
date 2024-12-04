@@ -89,8 +89,37 @@
                                 Delete</a>
                         </td>
                     </tr>
-                    {% endfor %}
 
+                    {% endfor %}
+                </table>
+
+                <table class="settings__table">
+                    <div class="settings">
+                    <h3 class="settings__title">Auctions</h3>
+                    <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-auction' %}"><i
+                            class="im im-plus"></i> Add Auction</a>
+                    </div>
+
+                    {% for auction in profile.auction_set.all %}
+                    <tr>
+                        <td class="settings__thumbnail">
+                            <a href="{% url 'single-auction' auction.id %}"><img src="{{auction.auto.featured_image.url}}" alt="Project Thumbnail"/></a>
+                        </td>
+                        <td class="settings__tableInfo">
+                            <a href="{{auto.featured_image.url}}">{{auction.auto.car_brand}} {{auction.auto.car_model}}</a>
+                            <p>{{auction.auto.description}}</p>
+                        </td>
+                        <td class="settings__tableActions">
+                            <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-auction' auction.id %}"><i
+                                    class="im im-edit"></i>
+                                Edit</a>
+                            <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete-auction' auction.id %}"><i
+                                    class="im im-x-mark-circle-o"></i>
+                                Delete</a>
+
+                        </td>
+                    </tr>
+                    {% endfor %}
                 </table>
             </div>
         </div>

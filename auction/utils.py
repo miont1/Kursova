@@ -1,4 +1,21 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Q
+
+from auction.models import Auction
+
+
+def searchAuction(request):
+    search_query = ""
+    if request.GET.get("search_query"):
+        search_query = request.GET.get("search_query")
+
+    auctions = Auction.objects.distinct().filter(
+        Q(auto__car_brand__icontains=search_query) |
+        Q(auto__car_model__icontains=search_query) |
+        Q(owner__name__icontains=search_query)
+    )
+
+    return auctions, search_query
 
 
 def paginateAuctions(request, auctions, results_per_page):
