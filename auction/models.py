@@ -44,16 +44,6 @@ class Bid(models.Model):
         return f"Bid by {self.user} for {self.auction.auto}"
 
 
-class AuctionHistory(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
-    bid = models.ForeignKey(Bid, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"History for auction {self.auction.id}"
-
-
 class AuctionLike(models.Model):
     auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)

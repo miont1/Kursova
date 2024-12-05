@@ -21,28 +21,28 @@
                     {% if request.user.profile == auction.owner %}
                     <p>You cannot bid your own car</p>
                     {% elif request.user.is_authenticated %}
-                        {% if auction.is_active %}
-                        <h3 class="singleProject__subtitle">Place Your Bid</h3>
-                        <form method="POST" action="{% url 'single-auction' auction.id %}">
-                            {% csrf_token %}
-                            <div class="form__field">
-                                <p>Enter your bid amount:</p>
-                                {{ bid_form.as_p }}
-                            </div>
-                            <input class="btn btn--sub btn--lg" type="submit" value="Place Bid" />
-                        </form>
-                        {% else %}
-                        <p>Auction has ended.</p>
-                        {% endif %}
+                    {% if auction.is_active %}
+                    <h3 class="singleProject__subtitle">Place Your Bid</h3>
+                    <form method="POST" action="{% url 'single-auction' auction.id %}">
+                        {% csrf_token %}
+                        <div class="form__field">
+                            <p>Enter your bid amount:</p>
+                            {{ bid_form.as_p }}
+                        </div>
+                        <input class="btn btn--sub btn--lg" type="submit" value="Place Bid"/>
+                    </form>
+                    <div id="auction-data"
+                         data-auction-id="{{ auction.id }}"
+                         data-like-count="{{ auction.like_count }}"
+                         data-initial-liked="{{ initial_liked|yesno:'true,false' }}">
+                    </div>
                     {% else %}
-                    <a href="{% url 'login' %}?next={{request.path}}"><b>Login to place a bid</b></a>
+                    <p>Auction has ended.</p>
                     {% endif %}
 
-                <div id="auction-data"
-                 data-auction-id="{{ auction.id }}"
-                 data-like-count="{{ auction.like_count }}"
-                 data-initial-liked="{{ initial_liked|yesno:'true,false' }}">
-                </div>
+                    {% else %}
+                    <a href="{% url 'login' %}?next={{request.path}}"><b>Login to place a bid and like</b></a>
+                    {% endif %}
 
 
                 </div>

@@ -1,6 +1,5 @@
 from django.db import models
 from users.models import Profile
-from django.contrib.auth.models import User
 
 
 # Create your models here.
@@ -61,7 +60,7 @@ class AutoComment(models.Model):
         unique_together = [["from_user", "auto"]]
 
     def __str__(self):
-        return self.from_user
+        return self.topic
 
 
 class Tag(models.Model):
