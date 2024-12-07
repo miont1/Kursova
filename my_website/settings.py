@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-oe^&i1^_9iry$gam5u@#fja$xf@owh*u*0u+gx#=51zr*g@u7-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['auto-shop-3dd759c39636.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'auto-shop-3dd759c39636.herokuapp.com']
 
 # Application definition
 
@@ -144,7 +144,7 @@ DATABASES = {
 #     }
 # }
 
-
+#
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
@@ -198,7 +198,7 @@ EMAIL_HOST_USER = "django.send552@gmail.com"
 EMAIL_HOST_PASSWORD = "jdnbzilyvwmslzqs"
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/images/'
+MEDIA_URL = '/static/images/'
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static'
@@ -206,14 +206,13 @@ STATICFILES_DIRS = [
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 if os.getcwd() == '/app':
     DEBUG = False
