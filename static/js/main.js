@@ -19,3 +19,25 @@
          })
          }
     }
+
+
+    let tags = document.getElementsByClassName('auto-tag')
+
+    for(let i = 0; tags.length > i; i ++){
+        tags[i].addEventListener('click', (e)=> {
+            let tagId = e.target.dataset.tag
+            let autoId = e.target.dataset.auto
+
+            fetch('http://127.0.0.1:8000/api/remove-tag/', {
+                method:'DELETE',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({'auto': autoId, 'tag': tagId})
+            })
+            .then(response => response.json())
+            .then(data => {
+                    e.target.remove()
+            })
+        })
+    }

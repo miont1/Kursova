@@ -24,6 +24,14 @@ class Profile(models.Model):
         return self.username
 
     @property
+    def imageURL(self):
+        try:
+            url = self.profile_image.url
+        except:
+            url = ''
+        return url
+
+    @property
     def commentators(self):
         querySet = self.profilecomment_set.all().values_list('from_user__id', flat=True)
         return querySet
@@ -48,8 +56,8 @@ class ProfileComment(models.Model):
     id = models.BigAutoField(primary_key=True)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     from_user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="comments_made", null=True)
-    topic = models.CharField(max_length=30)
-    comment = models.TextField()
+    topic = models.CharField(max_length=30, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
     vote_total = models.IntegerField(default=0, null=True, blank=True)
     vote_ratio = models.IntegerField(default=0, null=True, blank=True)

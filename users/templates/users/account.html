@@ -9,7 +9,7 @@
                     <div class="card__body dev">
                         <a class="tag tag--pill tag--main settings__btn" href="{% url 'edit-account' %}"><i
                                 class="im im-edit"></i> Edit</a>
-                        <img class="avatar avatar--xl dev__avatar" src="{{ profile.profile_image.url }}"/>
+                        <img class="avatar avatar--xl dev__avatar" src="{{ profile.imageURL }}"/>
                         <h2 class="dev__name">{{profile.name}}</h2>
                         <p class="dev__title">{{profile.shortbio}}</p>
                         <p class="dev__location">Based in {{profile.location}}</p>
@@ -32,11 +32,13 @@
             </div>
             <div class="column column--2of3">
                 <div class="devInfo">
+                    <a class="tag tag--pill tag--main settings__btn" href="{% url 'user-profile' profile.id %}"><i
+                                class="im im-edit"></i> See profile</a>
                     <h3 class="devInfo__title">About Me</h3>
                     <p class="devInfo__about">{{profile.bio}}</p>
                 </div>
                 <div class="settings">
-                    <h3 class="settings__title">Skills</h3>
+                    <h3 class="settings__title">Advantages</h3>
                     <a class="tag tag--pill tag--sub settings__btn tag--lg" href="{% url 'create-adv' %}"><i
                             class="im im-plus"></i> Add
                         Advantage</a>
@@ -73,11 +75,11 @@
                     {% for auto in profile.autosmodel_set.all %}
                     <tr>
                         <td class="settings__thumbnail">
-                            <a href="{% url 'single-auto' auto.id %}"><img src="{{auto.featured_image.url}}"
+                            <a href="{% url 'single-auto' auto.id %}"><img src="{{auto.imageURL}}"
                                                                            alt="Project Thumbnail"/></a>
                         </td>
                         <td class="settings__tableInfo">
-                            <a href="{{auto.featured_image.url}}">{{auto.car_brand}} {{auto.car_model}}</a>
+                            <a href="{{auto.imageURL}}">{{auto.car_brand}} {{auto.car_model}}</a>
                             <p>{{auto.description}}</p>
                         </td>
                         <td class="settings__tableActions">
@@ -103,10 +105,10 @@
                     {% for auction in profile.auction_set.all %}
                     <tr>
                         <td class="settings__thumbnail">
-                            <a href="{% url 'single-auction' auction.id %}"><img src="{{auction.auto.featured_image.url}}" alt="Project Thumbnail"/></a>
+                            <a href="{% url 'single-auction' auction.id %}"><img src="{{auction.auto.imageURL}}" alt="Project Thumbnail"/></a>
                         </td>
                         <td class="settings__tableInfo">
-                            <a href="{{auto.featured_image.url}}">{{auction.auto.car_brand}} {{auction.auto.car_model}}</a>
+                            <a href="{{auto.imageURL}}">{{auction.auto.car_brand}} {{auction.auto.car_model}}</a>
                             <p>{{auction.auto.description}}</p>
                         </td>
                         <td class="settings__tableActions">

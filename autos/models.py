@@ -24,6 +24,14 @@ class AutosModel(models.Model):
         ordering = ['-vote_ratio', '-vote_total', 'car_brand', 'car_model']
 
     @property
+    def imageURL(self):
+        try:
+            url = self.featured_image.url
+        except:
+            url = ''
+        return url
+
+    @property
     def commentators(self):
         querySet = self.autocomment_set.all().values_list('from_user__id', flat=True)
         return querySet
@@ -48,8 +56,8 @@ class AutoComment(models.Model):
     id = models.BigAutoField(primary_key=True)
     auto = models.ForeignKey(AutosModel, on_delete=models.CASCADE)
     from_user = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    topic = models.CharField(max_length=30)
-    comment = models.TextField()
+    topic = models.CharField(max_length=30, null=True, blank=True)
+    comment = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
     vote_total = models.IntegerField(default=0, null=True, blank=True)
     vote_ratio = models.IntegerField(default=0, null=True, blank=True)

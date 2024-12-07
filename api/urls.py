@@ -15,4 +15,6 @@ urlpatterns = [
     path('autos/<str:pk>', views.getAuto),
     path('autos/<str:pk>/vote/', views.autoVote),
 
+    path('remove-tag/', views.removeTag),
+
 ]

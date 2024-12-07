@@ -30,7 +30,7 @@
           <div class="column">
             <div class="card project">
               <a href="{% url 'single-auto' auto.id %}" class="project">
-                <img class="project__thumbnail" src="{{ auto.featured_image.url }}" alt="auto thumbnail" />
+                <img class="project__thumbnail" src="{{ auto.imageURL }}" alt="auto thumbnail" />
                 <div class="card__body">
                   <h3 class="project__title">{{auto.car_brand}} {{auto.car_model}}</h3>
                   <h5 class="project__title">{{auto.price}}$</h5>

@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import AutosModel
+from .models import AutosModel, Tag
 from .forms import AutoForm, CommentAutoForm
 from .utils import searchAuto, paginateAutos
 
@@ -62,6 +62,7 @@ def auto_create(request):
     logger.info(f"Користувач {profile} відкрив форму створення авто.")
     form = AutoForm()
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', ' ').split()
         logger.info(f"Отримано POST-запит на створення авто від користувача {profile}.")
         form = AutoForm(request.POST, request.FILES)
         if form.is_valid():
@@ -69,7 +70,11 @@ def auto_create(request):
             auto.owner = profile
             auto.save()
             logger.info(f"Авто успішно створено: {auto}.")
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                auto.tags.add(tag)
             return redirect('account')
+
         else:
             logger.warning("Форма створення авто не пройшла валідацію.")
     context = {'form': form}
@@ -83,15 +88,21 @@ def auto_update(request, pk):
     auto = profile.autosmodel_set.get(id=pk)
     form = AutoForm(instance=auto)
     if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', ' ').split()
+
         logger.info(f"Отримано POST-запит на оновлення авто з ID: {pk}.")
         form = AutoForm(request.POST, request.FILES, instance=auto)
         if form.is_valid():
-            form.save()
+            auto.save()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                auto.tags.add(tag)
             logger.info(f"Авто з ID {pk} успішно оновлено.")
             return redirect('account')
         else:
             logger.warning("Форма оновлення авто не пройшла валідацію.")
-    context = {'form': form}
+
+    context = {'form': form, 'auto': auto}
     return render(request, 'autos/auto-form.html', context)
 
 

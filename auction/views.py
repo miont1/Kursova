@@ -146,6 +146,7 @@ def auctionDelete(request, auction_id):
 
 
 @csrf_exempt
+@login_required(login_url="login")
 def like_auction(request, auction_id):
     if request.method == 'POST':
         data = json.loads(request.body)

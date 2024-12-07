@@ -7,7 +7,7 @@ from .models import AutosModel, AutoComment
 class AutoForm(ModelForm):
     class Meta:
         model = AutosModel
-        fields = ['car_brand', 'car_model', 'price', 'description', 'tags', 'featured_image']
+        fields = ['car_brand', 'car_model', 'featured_image', 'price', 'description']
         widgets = {
             'tags': forms.CheckboxSelectMultiple(),
         }

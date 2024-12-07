@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .serializers import AutosModelSerializer
-from autos.models import AutosModel, AutoComment
+from autos.models import AutosModel, AutoComment, Tag
 
 
 @api_view(['GET', 'POST'])
@@ -48,3 +48,16 @@ def autoVote(request, pk):
 
     serializer = AutosModelSerializer(auto, many=False)
     return Response(serializer.data)
+
+
+@api_view(['DELETE'])
+def removeTag(request):
+    tagId = request.data['tag']
+    autoId = request.data['auto']
+
+    auto = AutosModel.objects.get(id=autoId)
+    tag = Tag.objects.get(id=tagId)
+
+    auto.tags.remove(tag)
+
+    return Response('Tag was deleted')

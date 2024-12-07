@@ -9,7 +9,7 @@
             <div class="column column--1of3">
                 <div class="card text-center">
                     <div class="card__body dev">
-                        <img class="avatar avatar--xl" src="{{ profile.profile_image.url }}"/>
+                        <img class="avatar avatar--xl" src="{{ profile.imageURL }}"/>
                         <h2 class="dev__name">{{profile.name}}</h2>
                         <p class="dev__title">{{profile.shortbio}}</p>
                         <p class="dev__location">Based in {{profile.location}}</p>
@@ -43,12 +43,12 @@
                 <div class="devInfo">
                     <h3 class="devInfo__title">Advantages</h3>
                     <div class="devInfo__skills">
+                        {% for adv in adv_descr %}
                         <div class="devSkill">
-                            {% for adv in adv_descr %}
-                            <h4 class="devSkill__title">{{adv.name}}</h4>
+                            <h4 class="devSkill__title"><b>{{adv.name}}</b></h4>
                             <p class="devSkill__info">{{adv.description}}</p>
-                            {% endfor %}
                         </div>
+                        {% endfor %}
 
                         <h3 class="devInfo__subtitle">Other Advantages</h3>
                         <div class="devInfo__otherSkills">
@@ -68,7 +68,7 @@
                             <div class="card project">
                                 <a href="{% url 'single-auto' auto.id %}" class="project">
 
-                                    <img class="project__thumbnail" src="{{auto.featured_image.url}}"
+                                    <img class="project__thumbnail" src="{{auto.imageURL}}"
                                          alt="project thumbnail"/>
                                     <div class="card__body">
                                         <h3 class="project__title">{{auto.car_brand}} {{auto.car_model}}</h3>
@@ -123,7 +123,7 @@
                             {% if comment.comment %}
                             <div class="comment">
                                 <a href="{% url 'user-profile' comment.from_user.id %}">
-                                    <img class="avatar avatar--md" src="{{comment.from_user.profile_image.url}}"
+                                    <img class="avatar avatar--md" src="{{comment.from_user.imageURL}}"
                                          alt="user"/>
                                 </a>
                                 <div class="comment__details">

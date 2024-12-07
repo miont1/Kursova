@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-oe^&i1^_9iry$gam5u@#fja$xf@owh*u*0u+gx#=51zr*g@u7-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['auto-shop-3dd759c39636.herokuapp.com']
 
 # Application definition
 
@@ -131,10 +131,22 @@ WSGI_APPLICATION = 'my_website.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'autoshop',
+        'USER':  'postgres',
+        'PASSWORD': '1234',
+        'HOST': 'localhost',
+        "PORT": '5432',
     }
 }
 
@@ -193,3 +205,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+if os.getcwd() == '/app':
+    DEBUG = False
