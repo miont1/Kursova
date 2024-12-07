@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -131,6 +132,10 @@ WSGI_APPLICATION = 'my_website.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+DATABASES = {
+    'default': dj_database_url.config(default='postgres://ufac6f5kju926m:p054548c5dd77dc9551868067595a6e7610bd50613dd8b63cb10d390b48e6237c@cbec45869p4jbu.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d50b0k8pe17uo0')
+}
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -139,16 +144,16 @@ WSGI_APPLICATION = 'my_website.wsgi.application'
 # }
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'autoshop',
-        'USER':  'postgres',
-        'PASSWORD': '1234',
-        'HOST': 'localhost',
-        "PORT": '5432',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'autoshop',
+#         'USER':  'postgres',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         "PORT": '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
