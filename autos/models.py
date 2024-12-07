@@ -26,7 +26,7 @@ class AutosModel(models.Model):
     @property
     def imageURL(self):
         try:
-            url = 'static' + self.featured_image.url
+            url = self.featured_image.url
         except:
             url = ''
         return url
