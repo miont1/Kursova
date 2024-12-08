@@ -28,7 +28,7 @@ class AutosModel(models.Model):
         try:
             url = self.featured_image.url
         except:
-            url = ''
+            url = '/static/images/default-auto.jpg'
         return url
 
     @property
