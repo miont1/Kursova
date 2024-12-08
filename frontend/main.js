@@ -1,3 +1,5 @@
+let URL = 'https://auto-shop-3dd759c39636.herokuapp.com/'
+
 let loginBtn = document.getElementById('login-btn')
 let logoutBtn = document.getElementById('logout-btn')
 
@@ -15,7 +17,7 @@ logoutBtn.addEventListener('click', (e) => {
 })
 
 
-let autosUrl = 'http://127.0.0.1:8000/api/autos/'
+let autosUrl = 'https://auto-shop-3dd759c39636.herokuapp.com/api/autos/'
 
 let getAutos = () => {
 fetch(autosUrl)
@@ -33,7 +35,7 @@ let auto = autos[i]
 
 let autoCard = `
 <div class="auto--card">
-<img src ="http://127.0.0.1:8000/${auto.featured_image}">
+<img src = "https://auto-shop-3dd759c39636.herokuapp.com/${auto.featured_image}">
 <div>
     <div class="card--header">
     <h3>${auto.car_brand} ${auto.car_model}</h3>
@@ -60,7 +62,7 @@ let addVoteEvents = () => {
             let vote = e.target.dataset.vote;
             let auto = e.target.dataset.auto;
 
-            fetch(`http://127.0.0.1:8000/api/autos/${auto}/vote/`, {
+            fetch(`https://auto-shop-3dd759c39636.herokuapp.com/api/autos/${auto}/vote/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
