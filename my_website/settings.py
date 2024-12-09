@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'storages',
 ]
 
 REST_FRAMEWORK = {
@@ -134,7 +135,7 @@ WSGI_APPLICATION = 'my_website.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://ufac6f5kju926m:p054548c5dd77dc9551868067595a6e7610bd50613dd8b63cb10d390b48e6237c@cbec45869p4jbu.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d50b0k8pe17uo0')
+    'default': dj_database_url.config(default=os.environ.get('DB_URL_KURSOVA'))
 }
 
 # DATABASES = {
@@ -149,8 +150,8 @@ DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': 'autoshop',
-#         'USER':  'postgres',
-#         'PASSWORD': '1234',
+#         'USER':  os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASS'),
 #         'HOST': 'localhost',
 #         "PORT": '5432',
 #     }
@@ -194,8 +195,8 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = "django.send552@gmail.com"
-EMAIL_HOST_PASSWORD = "jdnbzilyvwmslzqs"
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/images/'
@@ -212,6 +213,13 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+DEFAULT_FILE_STORAGE = "storages.backends.s3.S3Storage"
+
+AWS_S3_ACCESS_KEY_ID = os.environ.get('AWS_S3_ACCESS_KEY_ID')
+AWS_S3_SECRET_ACCESS_KEY = os.environ.get('AWS_S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_FILE_OVERWRITE = False
 
 if os.getcwd() == '/app':
     DEBUG = False
