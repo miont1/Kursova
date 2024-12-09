@@ -22,7 +22,7 @@ form.addEventListener('submit', (e) => {
     .then (data => {
         if (data.access){
         localStorage.setItem('token', data.access)
-        window.location = 'http://localhost:63342/frontend/autos-list.html'
+        window.location = 'http://localhost:63342/firstDjango/frontend/autos-list.html'
         }else{
         alert('Username OR password wrong')
         }
