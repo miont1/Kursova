@@ -28,7 +28,7 @@
             let tagId = e.target.dataset.tag
             let autoId = e.target.dataset.auto
 
-            fetch('http://127.0.0.1:8000/api/remove-tag/', {
+            fetch('https://auto-shop-3dd759c39636.herokuapp.com/api/remove-tag/', {
                 method:'DELETE',
                 headers:{
                     'Content-Type': 'application/json'
