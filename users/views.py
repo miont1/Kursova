@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 def profiles(request):
     logger.info("Відкрито сторінку профілів.")
     profiles, search_query = searchProfile(request)
-    profiles = Profile.objects.all().order_by('id')
     custom_range, profiles = paginateProfiles(request, profiles, 6)
     logger.info(f"Пошук профілів завершено. Кількість знайдених: {len(profiles)}.")
     contex = {'profiles': profiles, "search_query": search_query, "custom_range": custom_range}

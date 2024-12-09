@@ -15,7 +15,7 @@ def searchProfile(request):
         Q(shortbio__icontains=search_query) |
         Q(bio__icontains=search_query) |
         Q(advantage__in=advantages)
-    )
+    ).order_by('id')
 
     return profiles, search_query
 
