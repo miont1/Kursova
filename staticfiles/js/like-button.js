@@ -23,7 +23,7 @@ function renderLikeButton(auctionId, likeCount, isLiked) {
         likeCounter.innerText = newLikeCount;
 
         // Відправка POST-запиту
-        fetch(`http://127.0.0.1:8000/auction/like-auction/${auctionId}/`, {
+        fetch(`https://auto-shop-3dd759c39636.herokuapp.com/api/autos/${auctionId}/vote/`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ liked: !initialLiked }),
