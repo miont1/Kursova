@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<main class="projects">
+    <section class="hero-section text-center">
+        <div class="container container--narrow">
+            <div class="hero-section__box">
+                <h2>Search for <span>Auctions</span></h2>
+            </div>
+
+            <div class="hero-section__search">
+                <form id="searchForm" class="form" action="{% url 'all_auctions' %}" method="get">
+                    <div class="form__field">
+                        <label for="formInput#search">Search By Auctions</label>
+                        <input class="input input--text" id="formInput#search" type="text" name="search_query"
+                               value="{{search_query}}" placeholder="Search by Auction Details"/>
+                    </div>
+                    <input class="btn btn--sub btn--lg" type="submit" value="Search"/>
+                </form>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Auction List -->
+    <section class="projectsList">
+        <div class="container">
+            <div class="grid grid--three">
+                {% for auction in auctions %}
+                <div class="column">
+                    <div class="card project">
+                        <a href="{% url 'single-auction' auction.id %}" class="project">
+                            <img class="project__thumbnail" src="{{ auction.auto.featured_image.url }}"
+                                 alt="auction thumbnail"/>
+                            <div class="card__body">
+                                <h3 class="project__title">{{ auction.auto.car_brand }} {{ auction.auto.car_model }}</h3>
+                                <h5 class="project__title">{{ auction.current_price }}$</h5>
+                                <p><a class="project__author" href="{% url 'user-profile' auction.owner.id %}">By {{ auction.owner.name }}</a></p>
+                                <p class="project__time">Auction ends on: {{ auction.end_time|date:"d M Y, H:i" }}</p>
+                                <p class="project__status">
+                                    {% if auction.is_active %}
+                                    <span class="status active">Active</span>
+                                    {% else %}
+                                    <span class="status inactive">Closed</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {% include 'pagination.html' with queryset=auctions custom_range=custom_range %}
+</main>
+
+{% endblock content %}

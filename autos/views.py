@@ -1,34 +1,120 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
-from django.urls import reverse
+import logging
 
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
-# Create your views here.
+from .models import AutosModel, Tag
+from .forms import AutoForm, CommentAutoForm
+from .utils import searchAuto, paginateAutos
+
+# Налаштування логування
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 
 def all_autos(request):
-    return HttpResponse("все машины")
+    logger.info("Відкрито сторінку всіх авто.")
+    autos, search_query = searchAuto(request)
+    custom_range, autos = paginateAutos(request, autos, 6)
+    logger.info(f"Пошук авто завершено. Кількість знайдених: {len(autos)}.")
+    context = {'autos': autos, "search_query": search_query, "custom_range": custom_range}
+    return render(request, 'autos/all_autos.html', context)
 
 
-ALL_MARKS = {
-    "AUDI": "Audi AG (German: [ˈaʊ̯di ʔaːˈɡeː]) is a German automotive manufacturer of luxury vehicles headquartered in Ingolstadt, Bavaria, Germany. A subsidiary of the Volkswagen Group, Audi produces vehicles in nine production facilities worldwide.",
-    "BMW": "The BMW Group is the world's leading provider of premium cars and motorcycles and the home of the BMW, MINI, Rolls-Royce and BMW Motorrad brands. Our vehicles and products are tailored to the needs of our customers and constantly enhanced – with a clear focus on sustainability and the conservation of resources.",
-    "TOYOTA": "Toyota Motor Corp: Overview The company designs, manufactures and sells passenger cars, buses, minivans, trucks, specialty cars, recreational and sport-utility vehicles. It provides financing to dealers and customers for the purchase or lease of vehicles."
-}
+def all_autos_info_number(request, auto_number: int):
+    logger.info(f"Відкрито сторінку авто з ID: {auto_number}.")
+    form = CommentAutoForm()
+    try:
+        auto = AutosModel.objects.get(id=auto_number)
+        tags = auto.tags.all()
+        logger.info(f"Знайдено авто: {auto}. Кількість тегів: {tags.count()}.")
+
+        if request.method == "POST":
+            logger.info("Отримано POST-запит на додавання коментаря.")
+            form = CommentAutoForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.auto = auto
+                comment.from_user = request.user.profile
+                comment.save()
+                auto.getVoteCount
+                logger.info("Коментар успішно збережено.")
+                messages.success(request, "Your comment was successfully submitted!")
+                return redirect('single-auto', auto_number=auto.id)
+            else:
+                logger.warning("Форма коментаря не пройшла валідацію.")
+
+        context = {'auto': auto, 'tags': tags, 'form': form}
+        return render(request, 'autos/auto.html', context)
+
+    except AutosModel.DoesNotExist:
+        logger.error(f"Авто з ID {auto_number} не знайдено.")
+        return render(request, 'autos/not-founded.html', {'auto_name': auto_number})
 
 
-def all_autos_info(request, auto_name: str):
-    description = ALL_MARKS.get(auto_name)
-    if description:
-        return HttpResponse(description)
-    else:
-        return HttpResponseNotFound(f"Auto not founded {auto_name}")
+@login_required(login_url="login")
+def auto_create(request):
+    profile = request.user.profile
+    logger.info(f"Користувач {profile} відкрив форму створення авто.")
+    form = AutoForm()
+    if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', ' ').split()
+        logger.info(f"Отримано POST-запит на створення авто від користувача {profile}.")
+        form = AutoForm(request.POST, request.FILES)
+        if form.is_valid():
+            auto = form.save(commit=False)
+            auto.owner = profile
+            auto.save()
+            logger.info(f"Авто успішно створено: {auto}.")
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                auto.tags.add(tag)
+            return redirect('account')
+
+        else:
+            logger.warning("Форма створення авто не пройшла валідацію.")
+    context = {'form': form}
+    return render(request, 'autos/auto-form.html', context)
 
 
-def all_autos_info_number(request, auto_name: int):
-    auto_list = list(ALL_MARKS)
-    if auto_name > auto_list.__len__():
-        return HttpResponseNotFound(f"Auto number not founded {auto_name}")
-    auto = auto_list[auto_name - 1]
-    redirect_url = reverse('auto-name', args=(auto, ))
-    return HttpResponseRedirect(redirect_url)
+@login_required(login_url="login")
+def auto_update(request, pk):
+    profile = request.user.profile
+    logger.info(f"Користувач {profile} відкрив форму редагування авто з ID: {pk}.")
+    auto = profile.autosmodel_set.get(id=pk)
+    form = AutoForm(instance=auto)
+    if request.method == 'POST':
+        newtags = request.POST.get('newtags').replace(',', ' ').split()
+
+        logger.info(f"Отримано POST-запит на оновлення авто з ID: {pk}.")
+        form = AutoForm(request.POST, request.FILES, instance=auto)
+        if form.is_valid():
+            auto.save()
+            for tag in newtags:
+                tag, created = Tag.objects.get_or_create(name=tag)
+                auto.tags.add(tag)
+            logger.info(f"Авто з ID {pk} успішно оновлено.")
+            return redirect('account')
+        else:
+            logger.warning("Форма оновлення авто не пройшла валідацію.")
+
+    context = {'form': form, 'auto': auto}
+    return render(request, 'autos/auto-form.html', context)
+
+
+@login_required(login_url="login")
+def auto_delete(request, pk):
+    profile = request.user.profile
+    logger.info(f"Користувач {profile} відкрив форму видалення авто з ID: {pk}.")
+    auto = profile.autosmodel_set.get(id=pk)
+    context = {'object': auto}
+    if request.method == 'POST':
+        logger.info(f"Отримано POST-запит на видалення авто з ID: {pk}.")
+        auto.delete()
+        logger.info(f"Авто з ID {pk} успішно видалено.")
+        return redirect('account')
+    return render(request, 'delete-template.html', context)
